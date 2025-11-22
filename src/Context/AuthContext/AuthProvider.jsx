@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { auth } from '../../firebase/firebase.init';
 import { SiAwselasticloadbalancing } from 'react-icons/si';
 
@@ -51,7 +51,10 @@ const AuthProvider = ({children}) => {
         }
     },[])
 
-
+    const handleResetPass = (email) => {
+        setLoading(true)
+        return sendPasswordResetEmail(auth, email)
+    }
     const authInfo = {
         user,
         loading,
@@ -60,6 +63,7 @@ const AuthProvider = ({children}) => {
         signInGoogle,
         logOut,
         updateUserProfile,
+        handleResetPass
     };
     return (
         <AuthContext.Provider value={authInfo}>

@@ -1,21 +1,21 @@
-import React from 'react';
-import Logo from '../../../Component/Logo';
-import { Link, NavLink } from 'react-router';
-import useAuth from '../../../Hooks/useAuth';
-import { BsArrowUpRightCircleFill } from 'react-icons/bs';
+import React from "react";
+import Logo from "../../../Component/Logo";
+import { Link, NavLink } from "react-router";
+import useAuth from "../../../Hooks/useAuth";
+import { BsArrowUpRightCircleFill } from "react-icons/bs";
 
 const NavBar = () => {
-    const {user, logOut} = useAuth()
+    const { user, logOut } = useAuth();
 
     const handleLogOut = () => {
         logOut()
-          .then(result => {
-            console.log('logged out', result)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-    }
+            .then((result) => {
+                console.log("logged out", result);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
     const links = (
         <>
             <li>
@@ -33,6 +33,22 @@ const NavBar = () => {
                     About Us
                 </NavLink>
             </li>
+            {user ? (
+                <>
+                    <li>
+                        <NavLink to={"/pricing"} className={({ isActive }) => (isActive ? "bg-primary text-gray-600 px-4 py-1 rounded-full font-bold" : "text-gray-700 px-4 py-1 font-bold")}>
+                            Pricing
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to={"/addAParcel"} className={({ isActive }) => (isActive ? "bg-primary text-gray-600 px-4 py-1 rounded-full font-bold" : "text-gray-700 px-4 py-1 font-bold")}>
+                            Send A Parcel
+                        </NavLink>
+                    </li>
+                </>
+            ) : (
+                " "
+            )}
             <li>
                 <NavLink to={"/rider"} className={({ isActive }) => (isActive ? "bg-primary text-gray-600 px-4 py-1 rounded-full font-bold" : "text-gray-700 px-4 py-1 font-bold")}>
                     Be A Rider
@@ -54,10 +70,9 @@ const NavBar = () => {
                         {links}
                     </ul>
                 </div>
-                <a className="ml-4 text-xl">
-                    {" "}
+                <div className="ml-4 text-xl">
                     <Logo />
-                </a>
+                </div>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className=" flex gap-4 px-1">{links}</ul>
