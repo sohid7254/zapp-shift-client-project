@@ -1,7 +1,9 @@
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useAuth from "../../Hooks/useAuth";
 
 const AddAParcel = () => {
     const {
@@ -11,41 +13,42 @@ const AddAParcel = () => {
         // formState: { errors }
     } = useForm();
 
-
-    const serviceArea = useLoaderData()
-    const regionsDuplocate = serviceArea.map(c => c.region)
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const navigate = useNavigate()
+    const serviceArea = useLoaderData();
+    const regionsDuplocate = serviceArea.map((c) => c.region);
     const regions = [...new Set(regionsDuplocate)];
 
-    const senderRegion = useWatch( {control,name:'senderRegion'});
-    const receiverRegion = useWatch({control, name:'receiverRegion'})
+    const senderRegion = useWatch({ control, name: "senderRegion" });
+    const receiverRegion = useWatch({ control, name: "receiverRegion" });
 
-    const districsByRegion = region => {
-        const regionDistrics = serviceArea.filter(c => c.region === region);
-        const districts = regionDistrics.map(d => d.district)
-        return districts
-    }
+    const districsByRegion = (region) => {
+        const regionDistrics = serviceArea.filter((c) => c.region === region);
+        const districts = regionDistrics.map((d) => d.district);
+        return districts;
+    };
 
     const handleSendPArcel = (data) => {
-        const isDocument = data.parcelType === 'document'
+        const isDocument = data.parcelType === "document";
         const isSameDistrict = data.senderDistrict === data.receiverDistrict;
-        const parcelWeight = parseFloat(data.parcelWeight)
-        let cost = 0
-        if(isDocument){
+        const parcelWeight = parseFloat(data.parcelWeight);
+        let cost = 0;
+        if (isDocument) {
             cost = isSameDistrict ? 60 : 80;
-
         } else {
-            if(parcelWeight < 3){
+            if (parcelWeight < 3) {
                 cost = isSameDistrict ? 110 : 150;
             } else {
-                const minCharge = isSameDistrict ? 110: 150;
+                const minCharge = isSameDistrict ? 110 : 150;
                 const extraWeight = parcelWeight - 3;
-                const extraCharge = isSameDistrict ? extraWeight * 40: 
-                extraWeight *40 + 40;
+                const extraCharge = isSameDistrict ? extraWeight * 40 : extraWeight * 40 + 40;
 
-                cost = minCharge + extraCharge
+                cost = minCharge + extraCharge;
             }
         }
-        console.log("cost" , cost)
+        console.log("cost", cost);
+        data.cost = cost;
         Swal.fire({
             title: "Agree with the Cost...",
             text: `You will be cost ${cost} Taka`,
@@ -56,14 +59,22 @@ const AddAParcel = () => {
             confirmButtonText: "Yes, I Agree!",
         }).then((result) => {
             if (result.isConfirmed) {
-                // Swal.fire({
-                //     title: "Confirmed!",
-                //     text: "Your Cost is confirmed.",
-                //     icon: "success",
-                // });
+                // save parcel to the DB
+                axiosSecure.post("/parcels", data).then((res) => {
+                    console.log("after saving parcel", res.data);
+                    if (res.data.insertedId) {
+                        navigate('/dashboard/my-parcels')
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Parcel has created, Please Pay",
+                            showCancelButton: false,
+                            timer: 2500
+                        });
+                    }
+                });
             }
         });
-        
     };
     return (
         <div className="bg-base-100 rounded-xl px-15 py-10 my-10">
@@ -105,11 +116,11 @@ const AddAParcel = () => {
                         <fieldset className="fieldset">
                             {/* Name */}
                             <label className="label text-sm font-semibold text-black">Sender Name: </label>
-                            <input type="text" {...register("senderName")} className="input w-full" placeholder="Your Name" />
+                            <input type="text" {...register("senderName")} defaultValue={user?.displayName} className="input w-full" placeholder="Your Name" />
 
                             {/* sender email */}
                             <label className="label text-sm font-semibold text-black">Sender Email: </label>
-                            <input type="text" {...register("senderEmail")} className="input w-full" placeholder="Your Email" />
+                            <input type="text" {...register("senderEmail")} className="input w-full" placeholder="Your Email" defaultValue={user?.email} />
 
                             {/* sender region */}
 
