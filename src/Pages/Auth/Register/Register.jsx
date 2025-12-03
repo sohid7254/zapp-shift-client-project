@@ -5,6 +5,7 @@ import useAuth from '../../../Hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router';
 import SocialAuth from '../SocialAuth/SocialAuth';
 import axios from 'axios';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 
 const Register = () => {
@@ -13,7 +14,8 @@ const Register = () => {
     const { registerUser, updateUserProfile } = useAuth();
     const location = useLocation()
     const navigate = useNavigate()
-    console.log(location)
+    const axiosSecure = useAxiosSecure()
+    
 
     const handleRegisteration = (data) => {
         
@@ -21,8 +23,8 @@ const Register = () => {
         const profileImage = data.image[0]
 
         registerUser(data.email, data.password)
-            .then((result) => {
-                console.log(result.user)
+            .then(() => {
+                
                 //1.  store the image inmform data
                 const formData = new FormData();
                 formData.append('image', profileImage)
@@ -32,15 +34,31 @@ const Register = () => {
 
                 axios.post(image_API_URL, formData)
                   .then(res => {
-                    console.log('after image upload', res.data.data.url)
+                    const photoURL= res.data.data.url;
+
+                    // creat user in the data base
+                    const userInfo ={
+                        email: data.email,
+                        displayName: data.name,
+                        photoURL : photoURL
+                    }
+                    
+                    axiosSecure.post('/users', userInfo)
+                    .then(res => {
+                        if(res.data.insertedId){
+                            console.log('usr created in the backend')
+                        }
+                    })
+
+
                     // update user Profile on the firebase
                     const userProfile = {
                         displayName : data.name,
-                        photoURL : res.data.data.url
+                        photoURL : photoURL
                     }
                     updateUserProfile(userProfile)
                       .then(() => {
-                        console.log('userProfile updated')
+                        
                         navigate(location?.state || "/")
                       })
                       .catch(error => console.log(error))

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import Logo from '../Component/Logo';
 import { RiShoppingCartLine } from 'react-icons/ri';
-import { FaChevronDown, FaHome } from 'react-icons/fa';
+import { FaChevronDown, FaHome, FaMotorcycle, FaRegCreditCard } from 'react-icons/fa';
 import useAuth from '../Hooks/useAuth';
 
 const DashboardLayout = () => {
@@ -66,6 +66,18 @@ const DashboardLayout = () => {
                             <NavLink to={"/dashboard/my-parcels"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Parcels">
                                 <RiShoppingCartLine />
                                 <span className="is-drawer-close:hidden">My Parcels</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={"/dashboard/payment-history"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Payment History">
+                                <FaRegCreditCard />
+                                <span className="is-drawer-close:hidden">Payment History</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={"/dashboard/aprove-riders"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Aprove Riders">
+                                <FaMotorcycle />
+                                <span className="is-drawer-close:hidden">Aprove Riders</span>
                             </NavLink>
                         </li>
 

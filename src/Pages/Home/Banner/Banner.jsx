@@ -13,7 +13,7 @@ const Banner = () => {
     return (
         <Swiper modules={[Autoplay, Pagination]} spaceBetween={30} slidesPerView={1} loop={true} autoplay={{ delay: 3000 }}  pagination={{ clickable: true }} className='mt-5 md:px-4'>
             <SwiperSlide>
-                <Banner1 />
+                <Banner1/>
             </SwiperSlide>
             <SwiperSlide>
                 <Banner2 />

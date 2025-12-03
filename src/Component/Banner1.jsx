@@ -5,7 +5,7 @@ import { BsArrowUpRightCircleFill } from 'react-icons/bs';
 
 const Banner1 = () => {
     return (
-        <div className="flex flex-wrap items-center justify-between gap-8 bg-[#FFFFFF] px-6 py-10 md:px-10 rounded-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-8 bg-[#FFFFFF] px-6 py-10 md:px-10 rounded-2xl h-[550px]">
             {/* Left content */}
             <div className="flex-1 min-w-[280px] md:pr-6">
                 <img src={percel} alt="parcel" className="w-50" />

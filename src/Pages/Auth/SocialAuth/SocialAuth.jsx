@@ -2,17 +2,32 @@ import React from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import useAuth from '../../../Hooks/useAuth';
 import { useLocation, useNavigate } from 'react-router';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+
 
 const SocialAuth = () => {
     const {signInGoogle} = useAuth()
     const location = useLocation()
     const navigate = useNavigate()
+    const axiosSecure = useAxiosSecure()
     
     const handleGoogleSignIn = () =>{
         signInGoogle()
           .then(result => {
-            console.log(result.user)
-            navigate(location?.state || "/")
+              console.log(result.user);
+              navigate(location?.state || "/");
+              // creat user in the data base
+              const userInfo = {
+                  email: result.user.email,
+                  displayName: result.user.displayName,
+                  photoURL: result.user.photoURL,
+              };
+
+              axiosSecure.post('/users', userInfo)
+               .then(res => {
+                 console.log('user data has been store', res.data)
+                 
+               })
           })
           .catch(error => {
             console.log(error)

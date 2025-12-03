@@ -102,7 +102,7 @@ const AddAParcel = () => {
                     </fieldset>
                     <fieldset className="fieldset">
                         <label className="label text-lg font-bold text-black">Parcel Weight (KG) </label>
-                        <input type="Number" {...register("parcelWeight")} className="input w-full" placeholder="Parcel Name" />
+                        <input type="Number" {...register("parcelWeight")} className="input w-full" placeholder="Parcel Weight" />
                     </fieldset>
                 </div>
 
