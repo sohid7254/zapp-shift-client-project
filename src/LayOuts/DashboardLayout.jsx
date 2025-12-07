@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import Logo from '../Component/Logo';
-import { RiShoppingCartLine } from 'react-icons/ri';
-import { FaChevronDown, FaHome, FaMotorcycle, FaRegCreditCard } from 'react-icons/fa';
+import { RiEBike2Fill, RiShoppingCartLine } from 'react-icons/ri';
+import { FaChevronDown, FaHome, FaMotorcycle, FaRegCreditCard, FaUser } from 'react-icons/fa';
 import useAuth from '../Hooks/useAuth';
+import useRole from '../Hooks/useRole';
 
 const DashboardLayout = () => {
     const [showEmail, setShowEmail] = useState(false)
     const {user} = useAuth()
+    
+    const {role} = useRole();
     
     return (
         <div className="drawer lg:drawer-open max-w-7xl mx-auto">
@@ -15,7 +18,7 @@ const DashboardLayout = () => {
             <div className="drawer-content">
                 {/* Navbar */}
                 <nav className="navbar w-full bg-base-100 flex justify-between shadow-md">
-                    <div className='flex justify-center items-center'>
+                    <div className="flex justify-center items-center">
                         <label htmlFor="my-drawer-4" aria-label="open sidebar" className="btn btn-square btn-ghost">
                             {/* Sidebar toggle icon */}
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4">
@@ -31,7 +34,7 @@ const DashboardLayout = () => {
                         <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded-full border border-gray-300" />
                         <div className="text-left">
                             <p className="font-semibold">{user.displayName}</p>
-                            <p className="text-sm text-gray-500">Admin</p>
+                            <p className="text-sm text-gray-500">{role}</p>
                         </div>
                         <button onClick={() => setShowEmail(!showEmail)} className="btn btn-sm btn-ghost">
                             <FaChevronDown />
@@ -74,12 +77,28 @@ const DashboardLayout = () => {
                                 <span className="is-drawer-close:hidden">Payment History</span>
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to={"/dashboard/aprove-riders"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Aprove Riders">
-                                <FaMotorcycle />
-                                <span className="is-drawer-close:hidden">Aprove Riders</span>
-                            </NavLink>
-                        </li>
+                        {role === "admin" && (
+                            <>
+                                <li>
+                                    <NavLink to={"/dashboard/aprove-riders"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Aprove Riders">
+                                        <FaMotorcycle />
+                                        <span className="is-drawer-close:hidden">Aprove Riders</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={"/dashboard/users-management"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users Management">
+                                        <FaUser />
+                                        <span className="is-drawer-close:hidden">Users Management</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink to={"/dashboard/assign-riders"} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Assign Riders">
+                                        <RiEBike2Fill />
+                                        <span className="is-drawer-close:hidden">Assign Riders</span>
+                                    </NavLink>
+                                </li>
+                            </>
+                        )}
 
                         {/* List item */}
                         <li>

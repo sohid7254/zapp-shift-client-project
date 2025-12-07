@@ -11,7 +11,8 @@ const PaymentSuccess = () => {
     console.log(sessionId)
 
     useEffect(() => {
-        if(sessionId){
+        let ignore = false;
+        if(sessionId && !ignore){
             axiosSecure.patch(`/payment-succes?session_id=${sessionId}`)
              .then(res => {
                 console.log(res.data)
@@ -21,6 +22,7 @@ const PaymentSuccess = () => {
                 });
              })
         }
+        return () => { ignore = true; } 
     }, [sessionId, axiosSecure])
 
 

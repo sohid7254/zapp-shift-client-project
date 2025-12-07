@@ -1,21 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
-import { useParams } from 'react-router';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import { useParams } from "react-router";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const Payment = () => {
     const { parcelId } = useParams();
-    const axiosSecure = useAxiosSecure()
+    const axiosSecure = useAxiosSecure();
 
-    const {isLoading, data: parcel } = useQuery({
-        queryKey: ['parcels', parcelId],
+    const { isLoading, data: parcel } = useQuery({
+        queryKey: ["parcels", parcelId],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/parcels/${parcelId}`)
-            return res.data
-        }
-    })
-    if(isLoading){
+            const res = await axiosSecure.get(`/parcels/${parcelId}`);
+            return res.data;
+        },
+    });
+    if (isLoading) {
         return <span className="loading loading-bars loading-xl"></span>;
     }
 
@@ -25,18 +24,20 @@ const Payment = () => {
             parcelId: parcel._id,
             senderEmail: parcel.senderEmail,
             parcelName: parcel.parcelName,
-
-        }
-        const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
-        console.log(res.data)
-        window.location.href = res.data.url
-    }
-
+        };
+        const res = await axiosSecure.post("/create-checkout-session", paymentInfo);
+        console.log(res.data);
+        window.location.href = res.data.url;
+    };
 
     return (
         <div>
-            <h2>Please payNow ${parcel.cost} for :  {parcel.parcelName}</h2>
-            <button onClick={handlePayment} className='btn btn-primary btn-sm text-black'>Pay</button>
+            <h2>
+                Please payNow ${parcel.cost} for : {parcel.parcelName}
+            </h2>
+            <button onClick={handlePayment} className="btn btn-primary btn-sm text-black">
+                Pay
+            </button>
         </div>
     );
 };
